@@ -1,40 +1,46 @@
-function createPromise(position, delay) {
-  const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    // Fulfill
-  } else {
-    // Reject
+import Notiflix from 'notiflix';
+
+const form = document.querySelector('.form');
+
+form.addEventListener('submit', onFormSubmit);
+
+function onFormSubmit(e) {
+  e.preventDefault();
+
+  if (e.currentTarget.delay.value == 0 || e.currentTarget.amount.value == 0) {
+    return Notiflix.Notify.warning("Enter delay and number of steps!");
+} 
+
+  let delay = Number(e.currentTarget.delay.value);
+  const step = Number(e.currentTarget.step.value);
+  const amount = Number(e.currentTarget.amount.value);
+
+  for (let position = 1; position <= amount; position += 1) {
+    createPromise(position, delay)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`);
+      });
+    delay += step;
   }
 }
 
-// createPromise(2, 1500)
-//   .then(({ position, delay }) => {
-//     console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-//   })
-//   .catch(({ position, delay }) => {
-//     console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-//   });
+  function createPromise(position, delay) {
+    const shouldResolve = Math.random() > 0.3;
+    const PromiseObj = {
+      position,
+      delay,
+    };
 
-  const makeOrder = dish => {
-    const DELAY = 1000;
-
-    const promise = new Promise((resolve, reject) => {
-        const passed = Math.random() > 0.5;
-        setTimeout(() => {
-            if (passed) {
-                resolve(`✅Вот ваше блюдо: ${dish}`);
-            }
-            reject('❌Извините закончились продукты(');
-        }, DELAY);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (shouldResolve) {
+          resolve(PromiseObj);
+      } else {
+          reject(PromiseObj);
+      }
+      }, delay)
     });
-    return promise;
-   };
-makeOrder('пирожок').then(onMakeOrderSuccess).catch(onMakeOrderError);
-function onMakeOrderSuccess(result) {
-    console.log('onMakeOrderSuccess');
-    console.log(result);
-} 
-function onMakeOrderError(error) {
-    console.log('onMakeOrderError');
-    console.log(error);
-}
+  }

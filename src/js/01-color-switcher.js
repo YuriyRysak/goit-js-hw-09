@@ -1,6 +1,4 @@
-// import '../css/common.css';
-
-  
+import '../css/common.css';
 
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
