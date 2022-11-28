@@ -7,7 +7,7 @@ form.addEventListener('submit', onFormSubmit);
 function onFormSubmit(e) {
   e.preventDefault();
 
-  if (e.currentTarget.delay.value == 0 || e.currentTarget.amount.value == 0) {
+  if (e.currentTarget.delay.value < 0 || e.currentTarget.amount.value <= 0) {
     return Notiflix.Notify.warning("Enter delay and number of steps!");
 } 
 
